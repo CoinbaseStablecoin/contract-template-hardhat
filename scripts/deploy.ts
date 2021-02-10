@@ -1,24 +1,24 @@
-import { deployContract } from "ethereum-waffle";
-import { provider, wallet } from "./config";
-import MyTokenJSON from "../build/MyToken.json";
-import { MyToken } from "../@types/generated";
-import { utils } from "ethers";
+import { MyToken__factory } from "../@types/generated";
+import hre from "hardhat";
+
+const { ethers } = hre;
 
 async function main() {
-  const signer = wallet.connect(provider);
+  const myTokenFactory = (await hre.ethers.getContractFactory(
+    "MyToken"
+  )) as MyToken__factory;
 
-  const deployer = await signer.getAddress();
-  console.log("Deployer address:", deployer);
+  const initialSupply = ethers.utils.parseEther("1000000");
+  const myToken = await myTokenFactory.deploy(initialSupply);
 
-  const initialSupply = utils.parseEther("1000000");
-  const myToken = (await deployContract(signer, MyTokenJSON, [
-    initialSupply,
-  ])) as MyToken;
+  await myToken.deployed();
 
   console.log("MyToken deployed at:", myToken.address);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+main()
+  .then(() => process.exit(0))
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });

@@ -1,21 +1,24 @@
-import { expect, use } from "chai";
-import { deployContract, MockProvider, solidity } from "ethereum-waffle";
-import MyTokenJSON from "../build/MyToken.json";
-import { MyToken } from "../@types/generated";
-import * as ethers from "ethers";
+import { expect } from "chai";
+import { MyToken, MyToken__factory } from "../@types/generated";
+import hre from "hardhat";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 
-use(solidity);
-
+const { ethers } = hre;
 const { parseEther: toWei } = ethers.utils;
 
 describe("MyToken", () => {
-  const [alice, bob] = new MockProvider().getWallets();
+  let alice: SignerWithAddress;
+  let bob: SignerWithAddress;
   let token: MyToken;
 
   beforeEach(async () => {
-    token = (await deployContract(alice, MyTokenJSON, [
-      toWei("1000"),
-    ])) as MyToken;
+    [alice, bob] = await ethers.getSigners();
+
+    const myTokenFactory = (await hre.ethers.getContractFactory(
+      "MyToken"
+    )) as MyToken__factory;
+
+    token = await myTokenFactory.deploy(toWei("1000"));
   });
 
   it("can transfer funds", async () => {
