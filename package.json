@@ -15,7 +15,7 @@
     "test": "hardhat test",
     "solhint": "solhint 'contracts/**/*.sol'",
     "coverage": "yarn build && hardhat coverage",
-    "precommit": "yarn fmt && yarn typecheck && yarn lint && yarn solhint && yarn compile"
+    "precommit": "yarn fmt && yarn solhint && yarn compile && yarn typecheck && yarn lint"
   },
   "license": "MIT",
   "dependencies": {},

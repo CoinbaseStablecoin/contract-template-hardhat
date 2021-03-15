@@ -31,5 +31,8 @@ const config: HardhatUserConfig = {
     outDir: "@types/generated",
     target: "ethers-v5",
   },
+  paths: {
+    tests: "./contracts",
+  },
 };
 export default config;
